@@ -20,10 +20,23 @@ class BeatCounterView extends WatchUi.SimpleDataField {
     // guarantee that compute() will be called before onUpdate().
     function compute(info as Activity.Info) as Numeric or Duration or String or Null {
         // See Activity.Info in the documentation for available information.
+        var elapsedTime = getElapsedTime();
+
+        var activityTime = info.elapsedTime / 1000.0;
+        var averageHeartRate = info.averageHeartRate;
+        var activityTimeMins = activityTime / 60.0;
+        var totalBeats = activityTimeMins * averageHeartRate;
+        // System.println("Activity Time: " + activityTime);
+        // System.println("Elapsed Time: " + elapsedTime);
+        // System.println("totalBeats: " + totalBeats);
+
+        return totalBeats.toNumber();
+    }
+
+    function getElapsedTime() as Number {
         var currentTime = Time.now();
         var elapsedTime = currentTime.subtract(self.startTime);
-        System.println("Elapsed time: " + elapsedTime.value());
         self.startTime = Time.now();
-        return 0.0;
+        return elapsedTime.value();
     }
 }
